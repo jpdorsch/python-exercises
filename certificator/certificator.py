@@ -125,7 +125,7 @@ def receive():
         td = tempfile.mkdtemp(prefix = "cert")
         os.symlink(os.getcwd() + "/user-key.pub", td + "/user-key.pub")  # link on temp dir
                 
-        command = "ssh-keygen -s ca-key -n {} -V {} -I ca-key {}/user-key.pub ".format(username=username, SSH_CERT_VALIDITY, td)
+        command = "ssh-keygen -s ca-key -n {} -V {} -I ca-key {}/user-key.pub ".format(username, SSH_CERT_VALIDITY, td)
 
         app.logger.info("SSH keygen command: {}".format(command))
 

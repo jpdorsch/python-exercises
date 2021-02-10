@@ -124,16 +124,14 @@ def receive():
        
         td = tempfile.mkdtemp(prefix = "cert")
         os.symlink(os.getcwd() + "/user-key.pub", td + "/user-key.pub")  # link on temp dir
+                
+        command = "ssh-keygen -s ca-key -n {} -V {} -I ca-key {}/user-key.pub ".format(username=username, SSH_CERT_VALIDITY, td)
 
-        app.logger.info(f"Generating cert for user: {username}")
-        
-        command = f"ssh-keygen -s ca-key -n {username} -V {SSH_CERT_VALIDITY} -I ca-key {td}/user-key.pub "
-
-        app.logger.info(f"SSH keygen command: {command}")
+        app.logger.info("SSH keygen command: {}".format(command))
 
     except Exception as e:
         logging.error(e)
-        return jsonify(description=f"Error creating certificate. {e}", error=-1), 404
+        return jsonify(description="Error creating certificate: {}".format(e), error=-1), 404
 
     try:
         result = subprocess.check_output([command], shell=True)
@@ -149,7 +147,7 @@ def receive():
     except subprocess.CalledProcessError as e:
         return jsonify(description=e.output, error=e.returncode), 404
     except Exception as e:
-        return jsonify(description=f"Error creating certificate. {e}", error=-1), 404
+        return jsonify(description="Error creating certificate: {}".format(e), error=-1), 404
 
 
 

@@ -9,11 +9,6 @@ from flask import Flask, request, jsonify
 import functools
 import jwt
 
-import logging
-from logging.handlers import TimedRotatingFileHandler
-import base64
-import requests
-
 AUTH_HEADER_NAME = 'Authorization'
 
 SSH_CERT_VALIDITY = "+5m"
@@ -111,7 +106,6 @@ def check_auth_header(func):
         return func(*args, **kwargs)
     return wrapper_check_auth_header
 
-# returns an SSH certificate, username is got from token
 @app.route("/", methods=["GET"])
 @check_auth_header
 def receive():
@@ -123,14 +117,11 @@ def receive():
             app.logger.error("No username")
             return jsonify(description="Invalid user"), 401
 
-
-        # Check if user is authorized in OPA
+        
         system = request.args.get("system","")
         if not system:
             return jsonify(description='No system specified'), 404
        
-
-        # create temp dir to store certificate for this request
         td = tempfile.mkdtemp(prefix = "cert")
         os.symlink(os.getcwd() + "/user-key.pub", td + "/user-key.pub")  # link on temp dir
 
@@ -163,6 +154,7 @@ def receive():
 
 
 if __name__ == "__main__":    
+    
     app.run(debug=debug, host='0.0.0.0', port=CERTIFICATOR_PORT)
     
 

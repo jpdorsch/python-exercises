@@ -45,15 +45,15 @@ def check_header(header):
         return True
 
     except jwt.exceptions.InvalidSignatureError:
-        logging.error("JWT invalid signature", exc_info=True)
+        app.logger.error("JWT invalid signature", exc_info=True)
     except jwt.ExpiredSignatureError:
-        logging.error("JWT token has expired", exc_info=True)
+        app.logger.error("JWT token has expired", exc_info=True)
     except jwt.InvalidAudienceError:
-        logging.error("JWT token invalid audience", exc_info=True)
+        app.logger.error("JWT token invalid audience", exc_info=True)
     except jwt.exceptions.InvalidAlgorithmError:
-        logging.error("JWT invalid signature algorithm", exc_info=True)
+        app.logger.error("JWT invalid signature algorithm", exc_info=True)
     except Exception:
-        logging.error("Bad header or JWT, general exception raised", exc_info=True)
+        app.logger.error("Bad header or JWT, general exception raised", exc_info=True)
 
     return False
 
@@ -61,7 +61,7 @@ def check_header(header):
 # returns username
 def get_username(header):
     if debug:
-        logging.info('debug: cscs_api_common: get_username: ' + header)
+        app.logger.info('debug: cscs_api_common: get_username: ' + header)
     # header = "Bearer ey...", remove first 7 chars
     try:
         if realm_pubkey == '':
@@ -80,15 +80,15 @@ def get_username(header):
             return decoded['preferred_username']
 
     except jwt.exceptions.InvalidSignatureError:
-        logging.error("JWT invalid signature", exc_info=True)
+        app.logger.error("JWT invalid signature", exc_info=True)
     except jwt.ExpiredSignatureError:
-        logging.error("JWT token has expired", exc_info=True)
+        app.logger.error("JWT token has expired", exc_info=True)
     except jwt.InvalidAudienceError:
-        logging.error("JWT token invalid audience", exc_info=True)
+        app.logger.error("JWT token invalid audience", exc_info=True)
     except jwt.exceptions.InvalidAlgorithmError:
-        logging.error("JWT invalid signature algorithm", exc_info=True)
+        app.logger.error("JWT invalid signature algorithm", exc_info=True)
     except Exception:
-        logging.error("Bad header or JWT, general exception raised", exc_info=True)
+        app.logger.error("Bad header or JWT, general exception raised", exc_info=True)
 
     return None
 
@@ -98,7 +98,7 @@ def check_auth_header(func):
         try:
             auth_header = request.headers[AUTH_HEADER_NAME]
         except KeyError:
-            logging.error("No Auth Header given")
+            app.logger.error("No Auth Header given")
             return jsonify(description="No Auth Header given"), 401
         if not check_header(auth_header):
             return jsonify(description="Invalid header"), 401
@@ -130,7 +130,7 @@ def receive():
         app.logger.info("SSH keygen command: {}".format(command))
 
     except Exception as e:
-        logging.error(e)
+        app.logger.error(e)
         return jsonify(description="Error creating certificate: {}".format(e), error=-1), 404
 
     try:

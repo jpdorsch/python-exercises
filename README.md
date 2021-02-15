@@ -1,6 +1,6 @@
 # Python Exercises
 
-# Task 1 (20 mins)
+# Task 1
 
 See [certificator/certificator.py](certificator/certificator.py)
 
@@ -10,7 +10,7 @@ Tell us:
 2. Could you run it and curl the endpoint “/receive”?
 3. What do you like / dislike about the code? What would you change?
 
-# Task 2 (10 mins)
+# Task 2
 
 Take this snippet:
 
@@ -25,7 +25,7 @@ persons = [
 Keep persons object as it is.
 Create a `persons2` object from `persons` (i.e. with the same data), but the ages reduced by 10 years each.
 
-# Task 3 (45 mins)
+# Task 3
 
 Write a python CLI which receives a year number as input and responds with the following information:
 

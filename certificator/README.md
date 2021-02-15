@@ -2,23 +2,13 @@
 
 ## How to use
 
-- Clone: 
-
-  `git@github.com:jpdorsch/python-exercises.git`
+- Clone this repo
 
 - Install Python dependencies
 
-  `cd python-exercises/certificator`
-
-  `pip3 install -r requirements.txt`
-
 - Give demo keys the correct mode
 
-  `chmod 600 ca-key`
-
-- Run Flask server in the background
-
-  `python3.7 certificator.py &`
+- Run Flask server
 
 - Move to bash view and use curl for the calls
 

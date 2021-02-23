@@ -8,7 +8,7 @@ See [task01/task01.py](task01/task01.py)
 
 Tell us:
 
-- What would you need to run the server from task01?
+- What would you need to run the server from `task01`?
 - Try to run the server and `curl` the root endpoint `/`
 
 The query should look something like this:

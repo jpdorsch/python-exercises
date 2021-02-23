@@ -1,9 +1,9 @@
-#
-#  Copyright (c) 2019-2021, ETH Zurich. All rights reserved.
-#
-#  Please, refer to the LICENSE file in the root directory.
-#  SPDX-License-Identifier: BSD-3-Clause
-#
+# Reading exercise. Have a look at the code below and tell us:
+
+# 1. What do you think the code is doing?
+# 2. What do you like / dislike about the code?
+# 3. What would you change?
+
 import subprocess, os, tempfile
 from flask import Flask, request, jsonify
 import functools
@@ -18,7 +18,7 @@ AUTH_REQUIRED_SCOPE = os.environ.get("F7T_AUTH_REQUIRED_SCOPE", '').strip('\'"')
 
 AUTH_ROLE = os.environ.get("F7T_AUTH_ROLE", '').strip('\'"')
 
-CERTIFICATOR_PORT = os.environ.get("F7T_CERTIFICATOR_PORT", 5000)
+PORT = os.environ.get("F7T_PORT", 5000)
 
 realm_pubkey=os.environ.get("F7T_REALM_RSA_PUBLIC_KEY", '')
 if realm_pubkey != '':
@@ -33,11 +33,11 @@ app = Flask(__name__)
 
 
 def check_header(header):
-    
+
     # header = "Bearer ey...", remove first 7 chars
     try:
-        decoded = jwt.decode(header[7:], verify=False)        
-        
+        decoded = jwt.decode(header[7:], verify=False)
+
         if AUTH_REQUIRED_SCOPE != "":
             if AUTH_REQUIRED_SCOPE not in decoded["scope"].split():
                 return False
@@ -68,7 +68,7 @@ def get_username(header):
             decoded = jwt.decode(header[7:], verify=False)
         else:
             decoded = jwt.decode(header[7:], realm_pubkey, algorithms=realm_pubkey_type, options={'verify_aud': False})
-        
+
         try:
             if AUTH_ROLE in decoded["realm_access"]["roles"]:
 
@@ -109,7 +109,7 @@ def check_auth_header(func):
 @app.route("/", methods=["GET"])
 @check_auth_header
 def receive():
- 
+
     try:
         auth_header = request.headers[AUTH_HEADER_NAME]
         username = get_username(auth_header)
@@ -117,14 +117,14 @@ def receive():
             app.logger.error("No username")
             return jsonify(description="Invalid user"), 401
 
-        
+
         system = request.args.get("system","")
         if not system:
             return jsonify(description='No system specified'), 404
-       
+
         td = tempfile.mkdtemp(prefix = "cert")
         os.symlink(os.getcwd() + "/user-key.pub", td + "/user-key.pub")  # link on temp dir
-                
+
         command = "ssh-keygen -s ca-key -n {} -V {} -I ca-key {}/user-key.pub ".format(username, SSH_CERT_VALIDITY, td)
 
         app.logger.info("SSH keygen command: {}".format(command))
@@ -151,8 +151,8 @@ def receive():
 
 
 
-if __name__ == "__main__":    
-    
-    app.run(debug=debug, host='0.0.0.0', port=CERTIFICATOR_PORT)
-    
+if __name__ == "__main__":
+
+    app.run(debug=debug, host='0.0.0.0', port=PORT)
+
 

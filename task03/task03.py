@@ -12,3 +12,9 @@ persons = [
     {"name":"Tom", "lastName":"Jones", "age": 10} ]
 
 # Add your code here...
+
+# Follow up task.
+# Imagine persons database could grow a lot in size.
+# Implement a function that allows you to look up by name if a person is in the persons "database".
+# Note:
+# - Lookup speed is very important
